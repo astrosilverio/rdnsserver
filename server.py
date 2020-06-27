@@ -37,5 +37,6 @@ if __name__ == '__main__':
         request = server.recvfrom(buffer_size)
         message = request[0]
         address = request[1]
+        print(message)
 
-        server.sendto(message, address)
+        server.sendto(str.encode("thanks for your attention"), address)
