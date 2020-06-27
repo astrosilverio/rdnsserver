@@ -13,5 +13,5 @@ A toy project for a workshop. Definitely don't use this to do anything real.
 
 Stuff that's useful for debugging/testing/checking your work:
 
-- `sudo tcpdump port 53 -w out.pcap` - uses tcpdump to start listening to all network traffic and writing to a capture file you can open in Wireshark. (You can also create a capture file from within Wireshark but this is super easy!)
+- `sudo tcpdump [-i lo0] [port 53] -w out.pcap` - uses tcpdump to start listening to all network traffic and writing to a capture file you can open in Wireshark. `-i lo0` tells tcpdump to listen to all loopback (ie, local) traffic for when you're running your own server on localhost, and port 53 is the designated port for DNS. (You can also create a capture file from within Wireshark but this is super easy!)
 - `dig @localhost -p [port] google.com` - runs dig through your local DNS server at the specified port.
