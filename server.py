@@ -1,11 +1,11 @@
 import socket
+import json
 
-cache = dict()
+SERVER_IP = '127.0.0.1'
+SERVER_PORT = 20001
+BUFFER_SIZE = 1024 # huge shrug here, may have to adjust after figuring out what packets should look like
 
-server_ip = '127.0.0.1'
-server_port = 20001
-buffer_size = 1024 # huge shrug here, may have to adjust after figuring out what packets should look like
-
+ROOT_SERVERS_FILE = 'root_servers.json'
 
 def parse_request(request_packet):
     # bytes 0&1 are transaction ID
@@ -47,10 +47,16 @@ def parse_request(request_packet):
     return request_summary
 
 
-def lookup_domain(domain):
+def look_up_domain(domain):
     result = cache.get(domain)
     if result:
         return result
+    else:
+        fetch_result(domain)
+
+
+def fetch_result(domain):
+    pass
 
 
 def process_dns_server_response(response):
@@ -65,11 +71,16 @@ def format_response(dns_result):
 
 if __name__ == '__main__':
     server = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-    server.bind((server_ip, server_port))
+    server.bind((SERVER_IP, SERVER_PORT))
+
+    with open(ROOT_SERVERS_FILE, 'r') as roots:
+        root_servers = json.loads(roots.read())
+
+    cache = {'roots': root_servers, 'TLDs': {}, 'SLDs': {}}
 
     while True:
         # do an echo
-        request = server.recvfrom(buffer_size)
+        request = server.recvfrom(BUFFER_SIZE)
         message = request[0]
         address = request[1]
         parse_request(message)
