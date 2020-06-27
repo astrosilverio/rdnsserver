@@ -13,5 +13,9 @@ A toy project for a workshop. Definitely don't use this to do anything real.
 
 Stuff that's useful for debugging/testing/checking your work:
 
-- `sudo tcpdump [-i lo0] [port 53] -w out.pcap` - uses tcpdump to start listening to all network traffic and writing to a capture file you can open in Wireshark. `-i lo0` tells tcpdump to listen to all loopback (ie, local) traffic for when you're running your own server on localhost, and port 53 is the designated port for DNS. (You can also create a capture file from within Wireshark but this is super easy!)
+- `sudo tcpdump [-i lo0] [port 53] -w out.pcap` - uses tcpdump to start listening to all network traffic and writing to a capture file you can open in Wireshark. `-i lo0` tells (BSD?) tcpdump to listen to all loopback (ie, local) traffic for when you're running your own server on localhost, and port 53 is the designated port for DNS. (You can also create a capture file from within Wireshark but this is super easy!)
 - `dig @localhost -p [port] google.com` - runs dig through your local DNS server at the specified port.
+
+## To-Do
+
+- Right now, we assume you only pass one subdomain in because it's easier. In the future, we should grab the beginning of the message (transaction ID, flags, etc) and the end (type, class, additional records) and loop through the middle in case there are multiple subdomains (ex: mail.google.com). But right now passing something with multiple subdomains'll just fart out.
