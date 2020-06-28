@@ -60,8 +60,14 @@ class TestRecursiveDomain(unittest.TestCase):
         # self.assertEqual(fqdn, 'google.com')
         self.assertEqual(a_record, '22.22.22.22')
 
-    def test_looking_up_record_not_in_cache(self):
+    def test_looking_up_record_not_in_cache_if_there_is_a_nameserver_at_higher_level(self):
         domains = ['.', 'com', 'recurse']
         fqdn, a_record = scratchpad.recursively_look_up_domains(test_cache, domains)
         self.assertEqual(a_record, '33.33.33.33')
         self.assertIsNotNone(test_cache['.']['subdomains']['com']['subdomains'].get('recurse'))
+
+    def test_looking_up_record_not_in_cache_if_no_nameserver_at_immediately_higher_level(self):
+        """I think expected behavior here is to start asking nameservers for other nameservers,
+        which will need more sophisticated mocking"""
+        domains = ['.', 'com', 'recurse', 'blog']
+        assert False
