@@ -6,7 +6,10 @@ SERVER_PORT = 20001
 BUFFER_SIZE = 1024 # huge shrug here, may have to adjust after figuring out what packets should look like
 NULL_BYTE = (0).to_bytes(1,'little')
 
-ROOT_SERVERS_FILE = 'root_servers.json'
+with open('root_servers.json', 'r') as roots:
+    ROOT_SERVERS = json.loads(roots.read())
+
+cache = {}
 
 
 def parse_dns_packet(packet):
@@ -100,11 +103,6 @@ def format_response(dns_result):
 if __name__ == '__main__':
     server = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     server.bind((SERVER_IP, SERVER_PORT))
-
-    with open(ROOT_SERVERS_FILE, 'r') as roots:
-        root_servers = json.loads(roots.read())
-
-    cache = {'roots': root_servers, 'TLDs': {}, 'SLDs': {}}
 
     while True:
         # do an echo
